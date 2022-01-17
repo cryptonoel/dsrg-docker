@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+    dev:
+        container_name: sample_dev
+        build:
+            context: .
+            dockerfile: dockerfile
+        image: sample_img
+        security_opt:
+            - seccomp:unconfined
+        cap_add:
+            - SYS_PTRACE
+        tty: true
+    database:
+        container_name: sample_db
+        image: postgres:14
+        environment:
+            - POSTGRES_DB=sample_database
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        ports:
+            # host:container
+            - 10001:5432
+        volumes:
+            - database_data:/var/lib/postgresql/data
+
+volumes:
+    database_data: null

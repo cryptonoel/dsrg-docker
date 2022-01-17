@@ -1,0 +1,22 @@
+FROM ubuntu:20.04
+
+# NOTE
+# Important that apt-get update AND apt-get install are run in the same command
+# to ensure that the docker file installs the latest package versions. The rm
+# /var/lib/apt/lists/* command is to clean up the apt cache which reduces the
+# image size.
+
+# Install necessary packages
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=UTC apt-get install -y \
+    iputils-ping \
+    postgresql-client \
+    vim \
+    && apt-get autoclean && apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -ms /bin/bash demo_user -p demo_password
+
+USER demo_user
+WORKDIR /home/demo_user
+
+# Creating the workspace folder
+RUN mkdir -p ~/demo_application
